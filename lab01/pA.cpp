@@ -5,23 +5,20 @@
 //  Created by userwei
 //
 
-#ifdef LOCAL
-    #include "/Users/chou.ting.wei/Coding/stdc++.h"
-#else
-    #include <bits/stdc++.h>
-    #include <bits/extc++.h>
-    #pragma GCC optimize("O3,unroll-loops")
+#include <bits/stdc++.h>
+#include <bits/extc++.h>
 
-    using namespace __gnu_pbds;
-#endif
+#pragma GCC optimize("O3,unroll-loops")
+// #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
 using namespace std;
+using namespace __gnu_pbds;
  
 #define int long long
 #define ull unsigned long long
-
+ 
 #define For(z, x, y) for(int z = x; z <= y; z ++)
-#define Forr(z, x, y) for(int z = x; z >= y; z --)
+#define Ffor(z, x, y) for(int z = x; z >= y; z --)
 #define lowbit(x) ((x) & -(x))
  
 #define ef emplace_front
@@ -35,6 +32,9 @@ using namespace std;
 #define pdd pair<double, double>
 #define F first
 #define S second
+ 
+#define mset(a, b) memset(a, b, sizeof(a))
+#define mcpy(a, b) memcpy(a, b, sizeof(a))
  
 #define endl '\n'
  
@@ -64,12 +64,8 @@ void time(){
 int max(int a, int b) { return a > b ? a : b; }
 int gcd(int a, int b) { if(a == 0) return b; return b == 0 ? a : gcd(b, a % b); }
  
-void YES(bool b) { cout << (b ? "YES" : "NO") << endl; }
-void Yes(bool b) { cout << (b ? "Yes" : "No") << endl; }
-void sto(int k, int m) { cout << (k ? " " : "") << m; }
- 
 const double PI = acos(-1);
-const int INF = 1e18;
+const int INF = 5000000000000000000;
  
 struct custom_hash{
     // unordered_map<int, int, custom_hash> safe_map;
@@ -87,27 +83,39 @@ struct custom_hash{
     }
 };
 
-mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count()); 
 
-vector<int> v;
+struct Po{
+    int idx;
+    pii p;   
+}arr[200005];
+
+bool cmp(Po a, Po b){
+    if(a.p.F != b.p.F) return a.p.F > b.p.F;
+    else if(a.p.S % 2 == b.p.S % 2){
+        if(a.p.S != b.p.S) return a.p.S < b.p.S;
+        return a.idx < b.idx;
+    }
+    return a.p.S % 2 > b.p.S % 2;
+}
 
 int32_t main(){
     getAC();
-
+    
     int n;
     cin >> n;
+
     For(i, 1, n){
-        int k;
-        cin >> k;
-        v.eb(k);
+        cin >> arr[i].p.F >> arr[i].p.S;
+        arr[i].idx = i;
     }
 
-    sort(all(v));
+    sort(arr + 1, arr + n + 1, cmp);
 
-    for(auto &a:v){
-        cout << a << " \n"[&a == &v.back()];
-    }
+    For(i, 1, n) cout << arr[i].idx << " \n"[i == n];
 
     time();
     return 0;
+
 }
+
