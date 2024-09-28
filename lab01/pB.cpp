@@ -12,37 +12,37 @@
 // #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
 using namespace std;
-using namespace __gnu_pbds;
- 
+// using namespace __gnu_pbds;
+
 #define int long long
 #define ull unsigned long long
- 
+
 #define For(z, x, y) for(int z = x; z <= y; z ++)
 #define Ffor(z, x, y) for(int z = x; z >= y; z --)
 #define lowbit(x) ((x) & -(x))
- 
+
 #define ef emplace_front
 #define eb emplace_back
 #define all(x) x.begin(), x.end()
 #define sz(x) ((int) x.size())
 #define rev(x) reverse(all(x))
- 
+
 #define mp make_pair
 #define pii pair<int, int>
 #define pdd pair<double, double>
 #define F first
 #define S second
- 
+
 #define mset(a, b) memset(a, b, sizeof(a))
 #define mcpy(a, b) memcpy(a, b, sizeof(a))
- 
+
 #define endl '\n'
- 
+
 template<typename T> inline void chmin(T &_a, const T &_b) { if(_b < _a) _a = _b; }
 template<typename T> inline void chmax(T &_a, const T &_b) { if(_b > _a) _a = _b; }
- 
+
 clock_t start;
- 
+
 void getAC(){
     #ifdef LOCAL
         freopen("input.txt", "r", stdin);
@@ -53,20 +53,20 @@ void getAC(){
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 }
- 
+
 void time(){
     #ifdef LOCAL
         cerr << "Execution Time : " << double(clock() - start) / CLOCKS_PER_SEC << " (s)" << endl;
         fclose(stdin), fclose(stdout), fclose(stderr);
     #endif
 }
- 
+
 int max(int a, int b) { return a > b ? a : b; }
 int gcd(int a, int b) { if(a == 0) return b; return b == 0 ? a : gcd(b, a % b); }
- 
+
 const double PI = acos(-1);
 const int INF = 5000000000000000000;
- 
+
 struct custom_hash{
     // unordered_map<int, int, custom_hash> safe_map;
     // gp_hash_table<int, int, custom_hash> safe_hash_table;
@@ -76,7 +76,7 @@ struct custom_hash{
         x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
         return x ^ (x >> 31);
     }
- 
+
     size_t operator()(uint64_t x) const{
         static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
         return splitmix64(x + FIXED_RANDOM);
@@ -85,34 +85,45 @@ struct custom_hash{
 
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count()); 
 
-struct Po{
-    int idx;
-    pii p;   
-}arr[200005];
-
-bool cmp(Po a, Po b){
-    if(a.p.F != b.p.F) return a.p.F > b.p.F;
-    else if(a.p.S % 2 == b.p.S % 2){
-        if(a.p.S != b.p.S) return a.p.S < b.p.S;
-        return a.idx < b.idx;
-    }
-    return a.p.S % 2 > b.p.S % 2;
-}
+int a[200005], b[200005];
+pii arr[200005];
+priority_queue<int, vector<int>, greater<int> > pq;
 
 int32_t main(){
     getAC();
     
-    int n;
-    cin >> n;
+    int n, x;
+    cin >> n >> x;
 
     For(i, 1, n){
-        cin >> arr[i].p.F >> arr[i].p.S;
-        arr[i].idx = i;
+        cin >> a[i];
+    }
+    For(i, 1, n){
+        cin >> b[i];
+    }
+    For(i, 1, n){
+        arr[i].F = max(1, a[i] - b[i]);
+        arr[i].S = min(a[i] + b[i], x);
     }
 
-    sort(arr + 1, arr + n + 1, cmp);
+    sort(arr + 1, arr + n + 1);
 
-    For(i, 1, n) cout << arr[i].idx << " \n"[i == n];
+    int cnt = 0, now = 0, maxx = 0, maxidx = 0;
+    For(i, 1, n){
+        now = arr[i].F;
+        cnt ++;
+        while(!pq.empty() && pq.top() < now){
+            pq.pop();
+            cnt --;
+        }
+        pq.push(arr[i].S);
+        if(cnt > maxx){
+            maxx = cnt;
+            maxidx = now;
+        }
+    }
+
+    cout << maxidx << " " << maxx << endl;
 
     time();
     return 0;
