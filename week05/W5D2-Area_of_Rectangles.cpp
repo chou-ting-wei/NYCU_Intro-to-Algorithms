@@ -91,7 +91,7 @@ mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 struct Seg{
     int l, r, y, type;
-    Seg(int _l, int _r, int _y, int _type) : l(_l), r(_r), y(_y), type(_type) {}
+    Seg(int _l, int _r, int _y, int _type): l(_l), r(_r), y(_y), type(_type) {}
 };
 
 bool cmp(Seg &a, Seg &b){
